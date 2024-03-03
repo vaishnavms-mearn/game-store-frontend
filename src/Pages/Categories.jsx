@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Components/User/Header';
+import Footer from '../Components/User/Footer';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/esm/Button';
 import { getAllGamesAPI } from '../Services/allAPI';
 import { base_Url } from '../Services/base_Url';
-import filterListData from '../../src/Assets/js/filterListData';
+import filterListData from '../Assets/js/filterListData';
 import { Col, Container, Row } from 'react-bootstrap';
-
+import { Link } from 'react-router-dom';
 function Categories() {
     const [filters, setFilters] = useState(filterListData);
     const [allGames, setAllGames] = useState([]);
@@ -70,13 +70,15 @@ function Categories() {
                     </div>
                 </div>
                 <div className="container">
-                <Row>
-                    {filteredGames.length > 0 ? (
-                        filteredGames.map((item, index) => (
+                    <Row>
+                        {filteredGames.length > 0 ? (
+                            filteredGames.map((item, index) => (
                                 <Col lg={4} className='pxx-5'>
                                     <Card key={index} className='px-5 ' style={{ width: '28rem', backgroundColor: 'transparent', color: 'white' }}>
                                         <Card.Body>
-                                            <Card.Img variant="top" src={item ? `${base_Url}/uploads/${item.image}` : "null"} alt="" height={'370px'} />
+                                            <Link to={`../game/${item._id}`}>
+                                                <Card.Img variant="top" src={item ? `${base_Url}/uploads/${item.image}` : "null"} alt="" height={'370px'} />
+                                            </Link>
                                             <Card.Title className='text-white py-2'>{item.title}</Card.Title>
                                             <div className="d-flex justify-content-between my-2">
                                                 <Card.Subtitle className="text-white category"><p>{item.category}</p></Card.Subtitle>
@@ -89,11 +91,11 @@ function Categories() {
                                         </Card.Body>
                                     </Card>
                                 </Col>
-                        ))
-                    ) : (
-                        <div className="text-center">No Games found</div>
-                    )}
-                </Row>
+                            ))
+                        ) : (
+                            <div className="text-center">No Games found</div>
+                        )}
+                    </Row>
                 </div>
             </div>
             <Footer />

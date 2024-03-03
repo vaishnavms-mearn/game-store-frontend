@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCarousel, MDBCarouselItem } from 'mdb-react-ui-kit';
 import {
-  MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
@@ -16,12 +15,14 @@ import cyber from '../Assets/images/stray.jpg'
 import Button from 'react-bootstrap/Button';
 import cyberlogo from '../Assets/images/cyberpunk-logo.png'
 import { Link, useNavigate } from 'react-router-dom';
-import Animation from '../Components/Animation';
 import { loginAPI, registerAPI } from '../Services/allAPI';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import {  ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useFetchAllGames from '../Hooks/FetchAllGames';
+import { base_Url } from '../Services/base_Url';
+import Animation from '../Components/User/Animation';
 function Auth({ register }) {
-
+  Animation()
   const isRegisterFrom = register ? true : false
   const [userData, setUserData] = useState({
     username: "",
@@ -29,6 +30,7 @@ function Auth({ register }) {
     password: ""
   })
   const location = useNavigate();
+  const allGames = useFetchAllGames()
   //register function
   const registerData = async () => {
     const { username, email, password } = userData
@@ -77,7 +79,7 @@ function Auth({ register }) {
           // Adding an "OK" button to the toast
           closeButton: <Button variant="outline-light">OK</Button>,
           // Handle the action when the button is clicked
-          
+
           onClose: () => {
             location('/');
           }
@@ -90,7 +92,7 @@ function Auth({ register }) {
       }
     }
   }
-  Animation()
+
   useEffect(() => {
     document.getElementById('formControlLg').value = '';
   }, []);
@@ -120,10 +122,10 @@ function Auth({ register }) {
               <form action="" autoComplete="off">
                 {
                   isRegisterFrom &&
-                  <MDBInput wrapperClass='mb-4 mx-5 w-100' autoComplete="off" labelClass='label-class' value={userData.username} onChange={(e) => setUserData({ ...userData, username: e.target.value })} label='Name' id='formControlLg' type='name' size="lg" />
+                  <MDBInput wrapperClass='mb-4 mx-5 w-100' autoComplete="off" labelClass='white-label-class' value={userData.username} onChange={(e) => setUserData({ ...userData, username: e.target.value })} label='Name' id='formControlLg' type='name' size="lg" />
                 }
-                <MDBInput wrapperClass='mb-4 mx-5 w-100' autoComplete="off" labelClass='label-class' value={userData.email} onChange={(e) => setUserData({ ...userData, email: e.target.value })} label='Email address' id='formControlLg' type='email' size="lg" />
-                <MDBInput wrapperClass='mb-4 mx-5 w-100' labelClass='label-class' value={userData.password} onChange={(e) => setUserData({ ...userData, password: e.target.value })} label='Password' id='formControlLg' type='password' size="lg" autoComplete="off" />
+                <MDBInput wrapperClass='mb-4 mx-5 w-100' autoComplete="off" labelClass='white-label-class' value={userData.email} onChange={(e) => setUserData({ ...userData, email: e.target.value })} label='Email address' id='formControlLg' type='email' size="lg" />
+                <MDBInput wrapperClass='mb-4 mx-5 w-100' labelClass='white-label-class' value={userData.password} onChange={(e) => setUserData({ ...userData, password: e.target.value })} label='Password' id='formControlLg' type='password' size="lg" autoComplete="off" />
                 <div>
                   {
                     isRegisterFrom ?
@@ -153,16 +155,28 @@ function Auth({ register }) {
           </MDBCol>
 
           <MDBCol sm='6' className='d-none d-sm-block px-0' >
-            {/* <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"
-            alt="Login image" className="w-100"  /> */}
             <MDBCarousel className='carousel' >
-              <MDBCarouselItem itemId={1} interval={6000}>
-                <div className="carousel-item-content" style={{ background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))' }}>
-                  <img src={img} className='d-block w-100' alt='...' height={'730px'} style={{ objectFit: 'cover' }} />
+               <MDBCarouselItem itemId={1} interval={3000}>
+                  <div className="carousel-item-content" style={{ background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))' }}>
+                    <img src={allGames ? `${base_Url}/uploads/${allGames[0]?.image}` : "null"} className='d-block w-100' alt='...' height={'730px'} style={{ objectFit: 'cover' }} />
+                    <div className="form-overlay">
+                      <div className="form-overlay-content" data-aos="fade-left" data-aos-once='true'>
+                        <img src={allGames[0]?.logoImage}  className='logo-image mx-5' height={'300px'} width={'350px'} alt="" />
+                        <p className='text-white text-justify px-5'>{allGames[0]?.description}</p>
+                        <div className='button mx-5'>
+                          <Button variant="outline-light" className='mx-3'  >Buy Now</Button>{' '}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </MDBCarouselItem>
+             <MDBCarouselItem itemId={2} interval={3000}>
+              <div className="carousel-item-content" style={{ background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))' }}>
+                  <img src={allGames ? `${base_Url}/uploads/${allGames[1]?.image}` : "null"} className='d-block w-100' alt='...' height={'730px'} style={{ objectFit: 'cover' }} />
                   <div className="form-overlay">
-                    <div className="form-overlay-content" data-aos="fade-left" data-aos-once='true'>
-                      <img src={cyberlogo} className='logo-image mx-5' height={'100px'} width={'400px'} alt="" />
-                      <p className='text-white text-justify px-5'>Cyberpunk 2077 is an open-world, action-adventure RPG set in the dark future of Night City — a dangerous megalopolis obsessed with power, glamor, and ceaseless body modification.</p>
+                    <div className="form-overlay-content mt-5" data-aos="fade-left" data-aos-once='true'>
+                      <img src={allGames[1]?.logoImage}  className='logo-image mx-5 my-3' height={'130px'} width={'500px'} alt="" />
+                      <p className='text-white text-justify px-5'>{allGames[1]?.description}</p>
                       <div className='button mx-5'>
                         <Button variant="outline-light" className='mx-3'  >Buy Now</Button>{' '}
                       </div>
@@ -170,20 +184,19 @@ function Auth({ register }) {
                   </div>
                 </div>
               </MDBCarouselItem>
-              <MDBCarouselItem itemId={2} interval={5000}>
-                <img src={spi} className='d-block w-100 hi' alt='...' height={'730px'} style={{ objectFit: 'cover' }} />
-                <div className="form-overlay">
-                  <div className="form-overlay-content" data-aos="fade-left" data-aos-once='true'>
-                    <img src={cyberlogo} className='logo-image mx-5' height={'100px'} width={'400px'} alt="" />
-                    <p className='text-white text-justify px-5'>Cyberpunk 2077 is an open-world, action-adventure RPG set in the dark future of Night City — a dangerous megalopolis obsessed with power, glamor, and ceaseless body modification.</p>
-                    <div className='button mx-5'>
-                      <Button variant="outline-light" className='mx-3'  >Buy Now</Button>{' '}
+              <MDBCarouselItem itemId={3} interval={3000}>
+              <div className="carousel-item-content" style={{ background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))' }}>
+                  <img src={allGames ? `${base_Url}/uploads/${allGames[2]?.image}` : "null"} className='d-block w-100' alt='...' height={'730px'} style={{ objectFit: 'cover' }} />
+                  <div className="form-overlay">
+                    <div className="form-overlay-content mt-5" data-aos="fade-left" data-aos-once='true'>
+                      <img src={allGames[2]?.logoImage}  className='logo-image mx-5 my-5' height={'100px'} width={'450px'} alt="" />
+                      <p className='text-white text-justify px-5'>{allGames[2]?.description}</p>
+                      <div className='button mx-5'>
+                        <Button variant="outline-light" className='mx-3'  >Buy Now</Button>{' '}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </MDBCarouselItem>
-              <MDBCarouselItem itemId={3} interval={5000}>
-                <img src={cyber} className='d-block w-100' alt='...' height={'730px'} style={{ objectFit: 'cover' }} />
+                  </div>
               </MDBCarouselItem>
             </MDBCarousel>
           </MDBCol>

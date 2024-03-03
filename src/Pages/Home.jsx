@@ -1,11 +1,11 @@
 import React from 'react'
-import Banner from '../Components/Banner'
-import Header from '../Components/Header'
-import Footer from '../Components/Footer'
-import Discounts from '../Components/Discounts'
-import Trending from '../Components/Trending'
-import Free from '../Components/Free'
-import HighRated from '../Components/HighRated'
+import Banner from '../Components/User/Banner'
+import Header from '../Components/User/Header'
+import Footer from '../Components/User/Footer'
+import Discounts from '../Components/User/Discounts'
+import Trending from '../Components/User/Trending'
+import Free from '../Components/User/Free'
+import HighRated from '../Components/User/HighRated'
 
 function Home() {
   return (

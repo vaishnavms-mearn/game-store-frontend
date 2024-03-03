@@ -11,7 +11,7 @@ const filterListData=[
 },
 {
     _id: 3,
-    name: 'Sports',
+    name: 'Shooting',
     active: false
 },
 {

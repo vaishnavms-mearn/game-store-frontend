@@ -5,6 +5,13 @@ function Animation() {
     useEffect(() => {
         // Initialize AOS for each slide individually
         const items = document.querySelectorAll('.form-overlay-content');
+        const banner = document.querySelectorAll('.banner-overlay-content');
+        banner.forEach(item => {
+            AOS.init({
+                duration: 3000,
+                // Customize AOS options for each slide if needed
+            });
+        });
         items.forEach(item => {
             AOS.init({
                 duration: 3000,

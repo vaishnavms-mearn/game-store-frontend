@@ -11,7 +11,7 @@ import { base_Url } from '../../Services/base_Url';
 import { editGamesAPI } from '../../Services/allAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import filterListData from '../../Assets/js/filterListData';
-function EditGames({ game }) {
+function updateUser({ user }) {
     const { editGameRes, setEditGameRes } = useContext(editGameResponseContext)
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -25,7 +25,7 @@ function EditGames({ game }) {
     console.log(game);
     //to hold project details
     const [gameDetails, setgameDetails] = useState({
-        id: game._id, title: game.title, description: game.description, rating: game.rating, price: game.price, category: game.category, logoImage: game.logoImage, image: "", link: game.link, 
+        id: game._id, title: game.title, description: game.description, rating: game.rating, price: game.price, category: game.category, logoImage: game.logoImage, image: "", link: game.link,
     })
     console.log(gameDetails);
     //to hold image url
@@ -156,4 +156,4 @@ function EditGames({ game }) {
     )
 }
 
-export default EditGames
+export default updateUser

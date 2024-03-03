@@ -1,0 +1,163 @@
+import React, { useEffect, useState } from 'react'
+import Card from 'react-bootstrap/Card';
+import { deletePurchasedGamesAPI, getAllGamesAPI } from '../Services/allAPI';
+import { base_Url } from '../Services/base_Url';
+import Button from 'react-bootstrap/esm/Button';
+import { Link } from 'react-router-dom';
+import Header from '../Components/User/Header';
+import Footer from '../Components/User/Footer';
+import { getGamesByIdAPI, getUsersAPI, purchasedGamesAPI } from '../Services/allAPI';
+import { ToastContainer, toast } from 'react-toastify';
+import { MDBBtn } from 'mdb-react-ui-kit';
+function Library() {
+    const [token, setToken] = useState("")
+    const [email, setEmail] = useState("")
+    const [userid, setUserId] = useState("")
+    const [purchasedGames, setPurchasedGames] = useState([]);
+    useEffect(() => {
+        if (sessionStorage.getItem("token")) {
+            setToken(sessionStorage.getItem("token"))
+        }
+    }, [])
+    useEffect(() => {
+        // Fetch user details and purchased games when the page is loaded
+        const fetchUserData = async () => {
+            try {
+                const existingUser = JSON.parse(sessionStorage.getItem("existingUser"));
+                if (existingUser) {
+                    setEmail(existingUser.email);
+                    setUserId(existingUser._id);
+                    const usersid = existingUser._id
+                    console.log(userid);
+                    const reqHeaders = { "Authorization": `Bearer ${token}` };
+                    const user = await getUsersAPI(usersid, reqHeaders);
+                    console.log(user);
+
+                    if (user.data) {
+                        setPurchasedGames(user.data.purchasedGames);
+                    }
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+
+        fetchUserData()
+
+        window.scrollTo(0, 0);
+    }, []);
+    console.log(purchasedGames);
+    const [allGames, setallGames] = useState([])
+    //api call
+    const allGame = async () => {
+
+        var reqHeader = {
+            "Content-Type": "multipart/form-data",
+        }
+
+        try {
+            console.log(reqHeader);
+            const result = await getAllGamesAPI(reqHeader)
+            console.log(result);
+            if (result.status === 200) {
+                setallGames(result.data)
+                console.log(allGames);
+            }
+            else {
+                alert("failed to retrieve project")
+            }
+        }
+        catch (err) {
+            console.log('Error Fetching projets', err);
+            alert('failed to retrieve projects')
+        }
+    }
+
+    useEffect(() => {
+        allGame()
+    }, [])
+    const deleteGamesFromUser = async (gameId) => {
+        if (token) {
+            toast.warning("Are you sure to delete the game?", {
+                closeButton: (
+                    <>
+                        <Button variant="outline-light btn-sm" onClick={async () => {
+                            try {
+                                const reqBody = {
+                                    userId: userid,
+                                    gameId: gameId
+                                };
+                                const reqHeader = {
+                                    "Authorization": `Bearer ${token}`
+                                }
+                                const result = await deletePurchasedGamesAPI(gameId,reqBody, reqHeader);
+
+                                if (result.status === 200) {
+                                    setPurchasedGames(prevPurchasedGames => prevPurchasedGames.filter(id => id !== gameId));
+                                    toast.success("Game deleted successfully");
+                                } else {
+                                    toast.error("Failed to delete game");
+                                }
+                            } catch (error) {
+                                console.log('Error deleting game', error);
+                                toast.error('Failed to delete game');
+                            }
+                        }}>Delete</Button>
+                        <Button variant="outline-light" onClick={() => {}}>No</Button>
+                    </>
+                )
+            });
+        }
+    };
+    return (
+        <div className="my-library" style={{ backgroundColor: '#121212' }} >
+            <Header/>
+        <div className='library container ps-5 py-3'>
+            <Link to={'/categories'}>
+                <h5 className='ps-4 text-white'>My Library <i className="fa-solid fa-arrow-right fa-xs mx-1 pt-3"></i></h5>
+            </Link>
+            <div className="d-flex">
+                {allGames.length > 0 ? (
+                    allGames.slice(0, 4).map((item, index) => (
+                        purchasedGames.includes(item._id) && (
+                            <Card className='me-4' style={{ width: '20rem', backgroundColor: 'transparent', color: 'white' }}>
+                                <Card.Body>
+                                    <Link to={`../game/${item._id}`}>
+                                        <Card.Img variant="top" src={item ? `${base_Url}/uploads/${item.image}` : "null"} alt="" height={'300px'} width={'300px'} />
+                                    </Link>
+                                    <Card.Title className='text-white py-2'>{item.title}</Card.Title>
+                                    <div className="d-flex justify-content-between my-2">
+                                        <Card.Subtitle className="text-white category"><p>{item.category}</p></Card.Subtitle>
+                                        <MDBBtn color='link' rounded size='sm' onClick={() => deleteGamesFromUser(item._id)}>
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </MDBBtn>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        )
+                    ))) : (
+                    <div className="text-center">no Games found</div>
+                )
+                }
+            </div>
+        </div>
+        <Footer/>
+        <ToastContainer
+                position="top-left"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
+        </div>
+
+    )
+}
+
+export default Library

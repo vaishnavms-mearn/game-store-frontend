@@ -23,7 +23,7 @@ const Sidebar = ({ onCollapse }) => {
     setActiveLink(link);
   };
   return (
-    <div className='sidebar-container' style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}>
+    <div className='sidebar-container' style={{ display: 'flex', height: '200vh', overflow: 'scroll initial' }}>
       <CDBSidebar collapsed={collapsed} textColor="#fff" backgroundColor="#1A181B">
         <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large" onClick={handleCollapseToggle}></i>} >
           <a href="/" className="text-decoration-none" style={{ color: 'inherit' }}>
